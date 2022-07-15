@@ -1,0 +1,49 @@
+version: '2.0'
+networks:
+    my-network:
+        external: true
+
+services:
+    api:
+        container_name: flask_service
+        build: .
+        networks:
+            - my-network
+        ports:
+            - "8005:5000"
+        environment:
+            - DEVICE_NAME=temperature
+    worker:
+        container_name: flask_service_worker
+        build: 
+            context: .
+            dockerfile: Dockerfile.celery
+        networks:
+            - my-network
+        environment:
+            - CELERY_TYPE=worker
+            - DEVICE_NAME=temperature
+        
+        ports:
+            - "5000:5000"
+    beat:
+        container_name: flask_service_beat
+        build: 
+            context: .
+            dockerfile: Dockerfile.celeryBeat
+        networks:
+            - my-network
+        environment:
+            - CELERY_TYPE=beat
+            - DEVICE_NAME=temperature
+        
+        ports:
+            - "5001:5000"
+    redis:
+        image: redis:latest
+        container_name: redis-devel
+        networks:
+            - my-network
+        restart: on-failure
+        ports:
+            - "6379:6379"

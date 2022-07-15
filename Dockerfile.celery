@@ -1,0 +1,16 @@
+FROM python:3.9
+
+COPY requirements.txt /src/requirements.txt
+WORKDIR /src/
+
+RUN pip install -r requirements.txt
+COPY . /src
+
+ENV APPLICAION_QUE="test_que"
+ENV APP_CONCURRENCY="1"
+ENV WORKER_NAME="flask_worker_1"
+#ENV CELERY_TYPE="worker" # This can be type worker or beat
+
+
+#ENTRYPOINT celery -A run_celery.celery ${CELERY_TYPE} -Q ${APPLICAION_QUE} --concurrency ${APP_CONCURRENCY} -n ${WORKER_NAME} --loglevel=info
+ENTRYPOINT celery -A run_celery.celery ${CELERY_TYPE}  --concurrency ${APP_CONCURRENCY} -n ${WORKER_NAME} --loglevel=info

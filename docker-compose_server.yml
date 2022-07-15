@@ -1,0 +1,43 @@
+version: '2.0'
+networks:
+    my-network:
+        external: true
+
+services:
+    server:
+        container_name: flask_service_server
+        build: .
+        networks:
+            - my-network
+        ports:
+            - "8006:5000"
+        environment:
+            - DEVICE_NAME=server
+    server_worker:
+        container_name: flask_service_server_worker
+        build: 
+            context: .
+            dockerfile: Dockerfile.celery
+        networks:
+            - my-network
+        ports:
+            - "8007:5000"
+        environment:
+            - DEVICE_NAME=server
+            - CELERY_TYPE=worker        
+    redis:
+        image: redis:latest
+        container_name: redis-devel
+        networks:
+            - my-network
+        restart: on-failure
+        ports:
+            - "6379:6379"
+    # influx:
+    #     image: quay.io/influxdb/influxdb:2.0.0-rc
+    #     container_name: influx-db
+    #     networks:
+    #         - my-network
+    #     restart: on-failure
+    #     ports:
+    #         - "8086:8086"
