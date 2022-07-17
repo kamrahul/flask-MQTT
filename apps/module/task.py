@@ -30,7 +30,7 @@ def periodic_task():
                         "topic":"server",
                         "msg": "SENSOR "+device_name + ' VALUE - '+random.choice(list1)
                     }
-    res = requests.post('http://192.168.1.6:8005/dummy_module/publish', json=data_to_send)
+    res = requests.post('http://192.168.1.6:80/dummy_module/publish', json=data_to_send)
     #print ('response from server:',res.text)
 
     current_app.logger.info("Data pushed to server")

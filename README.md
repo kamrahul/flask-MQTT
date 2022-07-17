@@ -13,3 +13,4 @@
 
 ## Add file controller.py
 ###
+balena push g_rahul_k/home --debug

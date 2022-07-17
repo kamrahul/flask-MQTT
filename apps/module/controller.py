@@ -50,3 +50,12 @@ def publish_message():
 
    publish_result = mqtt_client.publish(request_data['topic'], request_data['msg'])
    return jsonify({'code': publish_result[0]})
+
+
+@dummy_module.route('/print', methods=['POST'])
+def print():
+    request_data = request.get_json()
+    current_app.logger.warning("<---REQUEST RECEIVED-->")
+    current_app.logger.warning(request_data['topic'])
+    current_app.logger.warning(request_data['payload'])
+    return jsonify({'code': "Sucess"})

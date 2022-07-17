@@ -1,4 +1,6 @@
 import os
+import requests
+import logging
 from os import curdir
 from flask import Blueprint, Flask, current_app, request, jsonify
 from apps.factory import mqtt_client 
@@ -22,6 +24,7 @@ device_name = os.getenv('DEVICE_NAME','123')
 @mqtt_client.on_connect()
 def handle_connect(client, userdata, flags, rc):
     if rc == 0:
+        logging.warning('This is a warning message')
         print('Connected successfully')  
         print('DEVICE_NAME',device_name)
         mqtt_client.subscribe(device_name) # subscribe topic
@@ -43,6 +46,8 @@ def handle_mqtt_message(client, userdata, message):
         #data = "mem,host=host1 used_percent=23.43234543"
         #write_api.write(bucket, org, data)
         print('Received message on topic: {topic} with payload: {payload}'.format(**data))
+        if device_name=='kin123':
+            res = requests.post('http://192.168.1.6:80/dummy_module/print', json=data)
         #current_app.logger.warning('Received message on topic: {topic} with payload: {payload}'.format(**data))
     except Exception as e:
         print(e.message, e.args)
